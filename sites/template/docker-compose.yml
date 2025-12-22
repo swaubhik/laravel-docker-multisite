@@ -1,0 +1,73 @@
+# ===========================================
+# 🚀 Laravel Site
+# ===========================================
+
+services:
+  app:
+    build:
+      context: ../../shared/php
+      dockerfile: Dockerfile
+    container_name: ${SITE_NAME}_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+      - ../../shared/php/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      - ../../shared/php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+    networks:
+      - backend
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: ${SITE_NAME}_caddy
+    restart: unless-stopped
+    volumes:
+      - ./src:/var/www/html:ro
+      - ../../shared/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      - web
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${SITE_NAME}.rule=Host(`${SITE_DOMAIN}`)"
+      - "traefik.http.routers.${SITE_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${SITE_NAME}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.${SITE_NAME}.loadbalancer.server.port=80"
+      # HTTP redirect
+      - "traefik.http.routers.${SITE_NAME}-http.rule=Host(`${SITE_DOMAIN}`)"
+      - "traefik.http.routers.${SITE_NAME}-http.entrypoints=web"
+      - "traefik.http.routers.${SITE_NAME}-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    depends_on:
+      - app
+
+  worker:
+    build:
+      context: ../../shared/php
+      dockerfile: Dockerfile.worker
+    container_name: ${SITE_NAME}_worker
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+      - ./backups:/var/www/backups
+      - ../../shared/php/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      - ../../shared/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf:ro
+      - ../../shared/supervisor/conf.d:/etc/supervisor/conf.d:ro
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - backend
+    depends_on:
+      - app
+
+networks:
+  web:
+    external: true
+  backend:
+    external: true

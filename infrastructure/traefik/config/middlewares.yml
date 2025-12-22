@@ -1,0 +1,65 @@
+# Dynamic Configuration - Middlewares
+
+http:
+  middlewares:
+    # Security Headers
+    security-headers:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: "SAMEORIGIN"
+        referrerPolicy: "strict-origin-when-cross-origin"
+        customResponseHeaders:
+          X-Robots-Tag: "noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+          server: ""
+          X-Powered-By: ""
+        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'"
+
+    # Rate Limiting for API
+    rate-limit-api:
+      rateLimit:
+        average: 60
+        burst: 30
+        period: 1m
+
+    # Rate Limiting for Login
+    rate-limit-login:
+      rateLimit:
+        average: 5
+        burst: 10
+        period: 1m
+
+    # General Rate Limiting
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+        period: 1s
+
+    # Compression
+    gzip:
+      compress:
+        excludedContentTypes:
+          - text/event-stream
+
+    # Retry on failure
+    retry:
+      retry:
+        attempts: 3
+        initialInterval: 100ms
+
+    # Circuit Breaker
+    circuit-breaker:
+      circuitBreaker:
+        expression: "NetworkErrorRatio() > 0.30 || ResponseCodeRatio(500, 600, 0, 600) > 0.25"
+
+    # IP Whitelist (example - uncomment and configure as needed)
+    # ip-whitelist:
+    #   ipWhiteList:
+    #     sourceRange:
+    #       - "127.0.0.1/32"
+    #       - "192.168.1.0/24"

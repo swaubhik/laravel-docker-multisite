@@ -1,0 +1,41 @@
+# Environment files (sensitive data)
+.env
+!.env.example
+infrastructure/.env
+sites/*/.env
+!sites/*/.env.example
+
+# Traefik
+infrastructure/traefik/acme.json
+infrastructure/traefik/logs/*.log
+
+# Supervisor logs
+shared/supervisor/logs/*.log
+
+# Site backups
+sites/*/backups/*
+!sites/*/backups/.gitkeep
+
+# Site source code (each site has its own repo)
+sites/*/src/*
+!sites/*/src/.gitkeep
+!sites/template/src/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MySQL data (if local)
+infrastructure/mysql/data/
+
+# Node modules (if any)
+node_modules/
+
+# Composer vendor (if any)
+vendor/

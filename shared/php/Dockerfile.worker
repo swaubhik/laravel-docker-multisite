@@ -1,0 +1,79 @@
+ARG PHP_VERSION=8.0
+
+FROM php:${PHP_VERSION}-cli-alpine
+
+LABEL maintainer="Laravel Docker Worker"
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    curl \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    libwebp-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    icu-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    linux-headers \
+    $PHPIZE_DEPS \
+    mysql-client \
+    supervisor
+
+# Configure GD extension
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp
+
+# Install PHP extensions
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    mysqli \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip \
+    intl \
+    opcache \
+    xml \
+    soap
+
+# Install Redis extension
+RUN pecl install redis && docker-php-ext-enable redis
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Create system user
+RUN addgroup -g 1000 www && \
+    adduser -u 1000 -G www -h /home/www -D www
+
+# Create log directories
+RUN mkdir -p /var/log/supervisor && \
+    mkdir -p /var/log/php && \
+    mkdir -p /var/www/backups && \
+    chown -R www:www /var/log/supervisor /var/log/php /var/www/backups
+
+# Note: Supervisor configs are mounted as volumes in docker-compose.yml
+# Create default directories
+RUN mkdir -p /etc/supervisor/conf.d
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Note: Source code is mounted as volume in docker-compose.yml
+# No COPY needed here
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD supervisorctl status || exit 1
+
+# Start supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

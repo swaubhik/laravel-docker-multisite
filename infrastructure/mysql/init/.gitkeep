@@ -1,0 +1,2 @@
+# Place SQL initialization scripts here
+# They will be executed on first container startup

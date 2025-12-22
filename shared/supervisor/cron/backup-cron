@@ -1,0 +1,8 @@
+# Laravel Database Backup Cron
+# Runs daily at 2:00 AM
+
+# Daily backup at 2:00 AM
+0 3 * * * /usr/local/bin/db-backup-cron.sh
+
+# Optional: Additional backup at 2:00 PM (uncomment if needed)
+# 0 14 * * * /usr/local/bin/db-backup-cron.sh

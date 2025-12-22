@@ -1,0 +1,61 @@
+# Caddyfile - PHP-FPM Proxy for Laravel
+# Caddy serves static files and proxies PHP requests to PHP-FPM
+
+:80 {
+    root * /var/www/html/public
+
+    # Encode responses with gzip
+    encode gzip
+
+    # PHP-FPM handling
+    php_fastcgi app:9000 {
+        # Resolve symlinks for public path
+        resolve_root_symlink
+    }
+
+    # Serve static files
+    file_server {
+        # Hide hidden files
+        hide .git .env .htaccess
+    }
+
+    # Security - block access to sensitive files
+    @blocked {
+        path /.env
+        path /.git/*
+        path /storage/*
+        path /*.sql
+        path /composer.json
+        path /composer.lock
+        path /package.json
+        path /package-lock.json
+        path /phpunit.xml
+        path /webpack.mix.js
+        path /artisan
+    }
+    respond @blocked 404
+
+    # Allow storage symbolic link (for public files)
+    @storage {
+        path /storage/*
+        file {
+            root /var/www/html/public
+        }
+    }
+    file_server @storage
+
+    # Health check endpoint
+    respond /health 200
+
+    # Logging
+    log {
+        output stdout
+        format json
+        level INFO
+    }
+
+    # Error handling
+    handle_errors {
+        respond "{err.status_code} {err.status_text}"
+    }
+}

@@ -1,0 +1,17 @@
+# Laravel Horizon Configuration (if using Horizon instead of queue:work)
+# Rename this file to laravel-horizon.conf and remove laravel-worker.conf
+
+[program:laravel-horizon]
+process_name=%(program_name)s
+command=php /var/www/html/artisan horizon
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/horizon.log
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=3
+stopwaitsecs=3600
