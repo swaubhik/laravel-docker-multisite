@@ -17,10 +17,13 @@ sites/*/backups/*
 !sites/*/backups/.gitkeep
 
 # Site source code (each site has its own repo)
-sites/
 sites/*/src/*
 !sites/*/src/.gitkeep
-!sites/template/*
+!sites/*/src/.env.example
+
+# Ignore all sites except template
+sites/*
+!sites/template/
 
 # IDE
 .idea/
