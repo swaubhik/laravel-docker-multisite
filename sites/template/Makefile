@@ -22,7 +22,15 @@ help:
 	@echo "  make setup               - Initial setup"
 	@echo "  make deploy              - Deploy updates"
 	@echo ""
-	@echo "💾 Database"
+	@echo "� NPM / Assets"
+	@echo "==============="
+	@echo "  make npm-install   - Install npm packages"
+	@echo "  make npm-dev       - Build assets for development"
+	@echo "  make npm-prod      - Build assets for production"
+	@echo "  make npm-watch     - Watch and rebuild on changes"
+	@echo "  make npm cmd='...' - Run custom npm command"
+	@echo ""
+	@echo "�💾 Database"
 	@echo "==========="
 	@echo "  make backup    - Backup database"
 	@echo ""
@@ -66,12 +74,13 @@ setup:
 	docker compose exec app php artisan migrate --force
 	docker compose exec --user root app php artisan storage:link || true
 	docker compose exec --user root app chown -R www:www storage bootstrap/cache
+	docker compose exec --user root app npm run build || true
 	@echo "✅ Site setup complete!"
 
 deploy:
 	@echo "🚀 Deploying..."
-	cd src && git pull origin main || git pull origin master
-	docker compose exec app composer install --optimize-autoloader --no-dev
+	cd src && git pull origin sbi-collect-pay || git pull origin master
+	docker compose exec -u root app composer install --optimize-autoloader --no-dev
 	docker compose exec app php artisan config:cache
 	docker compose exec app php artisan route:cache
 	docker compose exec app php artisan view:cache
@@ -101,3 +110,22 @@ clear:
 	docker compose exec app php artisan cache:clear
 	docker compose exec app php artisan view:clear
 	docker compose exec app php artisan route:clear
+
+# ===========================================
+# 📦 NPM / Assets
+# ===========================================
+
+npm-install:
+	docker compose exec --user root app npm install
+
+npm-dev:
+	docker compose exec app npm run dev
+
+npm-prod:
+	docker compose exec --user root app npm run prod
+
+npm-watch:
+	docker compose exec app npm run watch
+
+npm:
+	docker compose exec app npm $(cmd)

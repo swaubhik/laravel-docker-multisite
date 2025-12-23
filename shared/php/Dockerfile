@@ -21,7 +21,10 @@ RUN apk add --no-cache \
     linux-headers \
     $PHPIZE_DEPS \
     mysql-client \
-    supervisor
+    supervisor \
+    bash \
+    nodejs \
+    npm
 
 # Configure GD extension
 RUN docker-php-ext-configure gd \
