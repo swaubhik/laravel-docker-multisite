@@ -23,7 +23,6 @@
     @blocked {
         path /.env
         path /.git/*
-        path /storage/*
         path /*.sql
         path /composer.json
         path /composer.lock
@@ -34,15 +33,6 @@
         path /artisan
     }
     respond @blocked 404
-
-    # Allow storage symbolic link (for public files)
-    @storage {
-        path /storage/*
-        file {
-            root /var/www/html/public
-        }
-    }
-    file_server @storage
 
     # Health check endpoint
     respond /health 200
