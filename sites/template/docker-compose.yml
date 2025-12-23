@@ -59,6 +59,8 @@ services:
       - ../../shared/php/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       - ../../shared/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf:ro
       - ../../shared/supervisor/conf.d:/etc/supervisor/conf.d:ro
+      - ../../shared/supervisor/scripts/db-backup-cron.sh:/usr/local/bin/db-backup-cron.sh:ro
+      - ../../shared/supervisor/scripts/db-backup.php:/usr/local/bin/db-backup.php:ro
     environment:
       - DB_HOST=mysql
       - DB_DATABASE=${DB_DATABASE}

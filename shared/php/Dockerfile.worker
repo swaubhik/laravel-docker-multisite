@@ -65,6 +65,10 @@ RUN mkdir -p /var/log/supervisor && \
 # Create default directories
 RUN mkdir -p /etc/supervisor/conf.d
 
+# Setup cron for backups (runs at 3 AM daily)
+# Scripts are mounted via docker-compose volumes
+RUN echo "0 3 * * * /usr/local/bin/db-backup-cron.sh >> /var/log/supervisor/backup.log 2>&1" >> /etc/crontabs/root
+
 # Set working directory
 WORKDIR /var/www/html
 
