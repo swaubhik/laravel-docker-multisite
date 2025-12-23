@@ -7,6 +7,8 @@ services:
     build:
       context: ../../shared/php
       dockerfile: Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
     container_name: ${SITE_NAME}_app
     restart: unless-stopped
     working_dir: /var/www/html
@@ -46,6 +48,8 @@ services:
     build:
       context: ../../shared/php
       dockerfile: Dockerfile.worker
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
     container_name: ${SITE_NAME}_worker
     restart: unless-stopped
     working_dir: /var/www/html

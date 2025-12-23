@@ -52,7 +52,7 @@ entryPoints:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: "sys.admin@cit.ac.in"
+      email: "s.admin@cit.ac.in"
       storage: /acme.json
       httpChallenge:
         entryPoint: web
