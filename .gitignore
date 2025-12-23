@@ -17,9 +17,10 @@ sites/*/backups/*
 !sites/*/backups/.gitkeep
 
 # Site source code (each site has its own repo)
+sites/
 sites/*/src/*
 !sites/*/src/.gitkeep
-!sites/template/src/
+!sites/template/*
 
 # IDE
 .idea/

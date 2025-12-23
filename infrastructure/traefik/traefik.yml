@@ -52,7 +52,7 @@ entryPoints:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: "${ACME_EMAIL:-admin@example.com}"
+      email: "sys.admin@cit.ac.in"
       storage: /acme.json
       httpChallenge:
         entryPoint: web

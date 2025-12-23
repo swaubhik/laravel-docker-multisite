@@ -29,6 +29,7 @@ services:
       - backend
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=web"
       - "traefik.http.routers.${SITE_NAME}.rule=Host(`${SITE_DOMAIN}`)"
       - "traefik.http.routers.${SITE_NAME}.entrypoints=websecure"
       - "traefik.http.routers.${SITE_NAME}.tls.certresolver=letsencrypt"
