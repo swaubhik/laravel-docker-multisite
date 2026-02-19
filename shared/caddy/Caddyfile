@@ -8,7 +8,7 @@
     encode gzip
 
     # PHP-FPM handling
-    php_fastcgi app:9000 {
+    php_fastcgi {$PHP_FPM_HOST:app}:9000 {
         # Resolve symlinks for public path
         resolve_root_symlink
     }

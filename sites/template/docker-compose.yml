@@ -23,6 +23,8 @@ services:
     image: caddy:2-alpine
     container_name: ${SITE_NAME}_caddy
     restart: unless-stopped
+    environment:
+      - PHP_FPM_HOST=${SITE_NAME}_app
     volumes:
       - ./src:/var/www/html:ro
       - ../../shared/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
