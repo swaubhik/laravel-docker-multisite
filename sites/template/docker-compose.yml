@@ -39,7 +39,7 @@ services:
       - "traefik.http.routers.${SITE_NAME}.tls.certresolver=letsencrypt"
       - "traefik.http.services.${SITE_NAME}.loadbalancer.server.port=80"
       # HTTP redirect
-      - "traefik.http.routers.${SITE_NAME}-http.rule=Host(`${SITE_DOMAIN}`)"
+      - "traefik.http.routers.${SITE_NAME}-http.rule=Host(`${SITE_DOMAIN}`) && !PathPrefix(`/.well-known/acme-challenge/`)"
       - "traefik.http.routers.${SITE_NAME}-http.entrypoints=web"
       - "traefik.http.routers.${SITE_NAME}-http.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
