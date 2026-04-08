@@ -21,7 +21,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 # Supported PHP versions
-SUPPORTED_PHP="7.4 8.0 8.1 8.2 8.3"
+SUPPORTED_PHP="7.4 8.0 8.1 8.2 8.3 8.4"
 
 show_help() {
     echo -e "${CYAN}🚀 Add New Laravel Site${NC}"
