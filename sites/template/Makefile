@@ -76,7 +76,7 @@ setup:
 
 deploy:
 	@echo "🚀 Deploying..."
-	cd src && git pull origin sbi-collect-pay || git pull origin master
+	cd src && git pull origin main || git pull origin master
 	docker compose exec -u root app composer install --optimize-autoloader --no-dev
 	docker compose exec app php artisan config:cache
 	docker compose exec app php artisan route:cache
