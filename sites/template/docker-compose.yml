@@ -14,6 +14,8 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html
+      - storage_data:/var/www/html/storage
+      - backups_data:/var/www/backups
       - ../../shared/php/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       - ../../shared/php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     networks:
@@ -57,7 +59,8 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html
-      - ./backups:/var/www/backups
+      - storage_data:/var/www/html/storage
+      - backups_data:/var/www/backups
       - ../../shared/php/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       - ../../shared/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf:ro
       - ../../shared/supervisor/conf.d:/etc/supervisor/conf.d:ro
@@ -80,3 +83,7 @@ networks:
     external: true
   backend:
     external: true
+
+volumes:
+  storage_data:
+  backups_data:
