@@ -9,9 +9,13 @@
 
     # PHP-FPM handling
     php_fastcgi {$PHP_FPM_HOST:app}:9000 {
-        # Resolve symlinks for public path
         resolve_root_symlink
-    }
+
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto https
+    }   
 
     # Serve static files
     file_server {
