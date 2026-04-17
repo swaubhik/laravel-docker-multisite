@@ -30,6 +30,7 @@ services:
       - PHP_FPM_HOST=${SITE_NAME}_app
     volumes:
       - ./src:/var/www/html:ro
+      - storage_data:/var/www/html/storage:ro
       - ../../shared/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
     networks:
       - web
