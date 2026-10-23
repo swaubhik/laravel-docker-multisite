@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      args:
+        PHP_VERSION: 8.4.27
+  worker:
+    build:
+      args:
+        PHP_VERSION: 8.4.27
